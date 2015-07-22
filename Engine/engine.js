@@ -3,5 +3,5 @@ var Game = (function () {
 
     };
 
-    return Game
+    return Game;
 }());
