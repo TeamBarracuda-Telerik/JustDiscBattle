@@ -2,14 +2,29 @@ body{
     position: relative;
 }
 
-#canvas-field, #svg-field {
+#svg-field {
+    background: url("../Images/scoreboard.jpg");
     border: 1px solid black;
     padding: 0;
     margin: auto;
     margin-top: 0;
     display: block;
     position: absolute;
-    top: 0px;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+#canvas-field{
+    background: url("../Images/gamefield.png");
+    border: 1px solid black;
+    padding: 0;
+    margin: auto;
+    margin-top: 80px;
+    display: block;
+    position: absolute;
+    top: 0;
     bottom: 0;
     left: 0;
     right: 0;
