@@ -1,14 +1,19 @@
 var canvasDrawer = new CanvasDrawer();
 var player = new Player('Pesho', 20, 180, 15);
 var disc = new Disc(canvasDrawer.canvasWidth / 2, canvasDrawer.canvasHeight / 2, 12);
+var enemy = new Enemy('Gosho', canvasDrawer.canvasWidth - 20, canvasDrawer.canvasHeight / 2, 12);
 
 function startGame() {
     canvasDrawer.clear();
     canvasDrawer.drawPlayer(player);
     canvasDrawer.drawDisc(disc);
+    canvasDrawer.drawEnemy(enemy);
     player.move();
     disc.move();
     detectCollisionWithDisc(player, disc);
+    detectCollisionWithDisc(enemy, disc);
+
+
 
     function detectCollisionWithDisc(player, disc) {
 

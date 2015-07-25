@@ -27,6 +27,12 @@ var CanvasDrawer = (function () {
             this.ctx.fill();
             this.ctx.strokeStyle = 'black';
             this.ctx.stroke();
+        },
+        drawEnemy: function(enemy) {
+            this.ctx.beginPath();
+            this.ctx.arc(enemy.x, enemy.y, enemy.radius, 0, 2 * Math.PI);
+            this.ctx.fillStyle = 'blue';
+            this.ctx.fill();
         }
     };
 
