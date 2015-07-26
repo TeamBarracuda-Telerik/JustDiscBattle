@@ -4,6 +4,8 @@ var player = new Player('Pesho', 20, 180, 15);
 var disc = new Disc(canvasDrawer.canvasWidth / 2, canvasDrawer.canvasHeight / 2, 12);
 var enemy = new Enemy('Gosho', canvasDrawer.canvasWidth - 20, canvasDrawer.canvasHeight / 2, 12);
 
+playField('playField', 0, 0, 640, 360);
+
 var _startTime = 0;
 function runTimer() {
     _startTime++;

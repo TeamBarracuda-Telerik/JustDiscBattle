@@ -36,8 +36,10 @@ var Player = (function () {
 
         canvas.addEventListener('mousemove', function(evt) {
             var mousePos = getMousePosition(canvas, evt);
-            self.x = mousePos.x;
-            self.y = mousePos.y;
+            if(mousePos.x < 325 && self.x < 325){
+                self.x = mousePos.x;
+                self.y = mousePos.y;
+            }
 
         }, false);
     };

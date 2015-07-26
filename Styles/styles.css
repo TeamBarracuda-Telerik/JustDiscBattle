@@ -16,8 +16,8 @@ body{
     right: 0;
 }
 
-#canvas-field{
-    background: url("../Images/gamefield.png");
+#canvas-field, #playField{
+    /*background: url("../Images/gamefield.png");*/
     border: 1px solid black;
     padding: 0;
     margin: auto;
