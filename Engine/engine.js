@@ -1,19 +1,30 @@
 var canvasDrawer = new CanvasDrawer();
+SvgDrawer.svgNS = 'http://www.w3.org/2000/svg';
 var player = new Player('Pesho', 20, 180, 15);
 var disc = new Disc(canvasDrawer.canvasWidth / 2, canvasDrawer.canvasHeight / 2, 12);
 var enemy = new Enemy('Gosho', canvasDrawer.canvasWidth - 20, canvasDrawer.canvasHeight / 2, 12);
+
+var _startTime = 0;
+function runTimer() {
+    _startTime++;
+}
+
+setInterval(runTimer, 1000);
 
 function startGame() {
     canvasDrawer.clear();
     canvasDrawer.drawPlayer(player);
     canvasDrawer.drawDisc(disc);
     canvasDrawer.drawEnemy(enemy);
+
+    SvgDrawer.clear(); // Clears all nodes in svg except <a> tag and it's content.
+    SvgDrawer.drawForms();
+    SvgDrawer.drawTime(_startTime);
+
     player.move();
     disc.move();
     detectCollisionWithDisc(player, disc);
     detectCollisionWithDisc(enemy, disc);
-
-
 
     function detectCollisionWithDisc(player, disc) {
 
