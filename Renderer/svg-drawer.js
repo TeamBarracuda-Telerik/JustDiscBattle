@@ -15,18 +15,20 @@ var SvgDrawer = (function () {
 
         drawForms: {
             value: function () {
-                var xOfPcAIScore = (640 - 150).toString();
-                var rectForPlayerSore = document.createElementNS(this.svgNS, 'rect');
-                var pcAISocre = document.createElementNS(this.svgNS, 'rect');
-                var rectForTime = document.createElementNS(this.svgNS, 'rect');
+                var xOfPcAIScore = (640 - 150).toString(),
+                    rectForPlayerSore = document.createElementNS(this.svgNS, 'rect'),
+                    pcAISocre = document.createElementNS(this.svgNS, 'rect'),
+                    rectForTime = document.createElementNS(this.svgNS, 'rect'),
+                    fragment =  document.createDocumentFragment();
 
                 rectForPlayerSore = setAttributesForRect(rectForPlayerSore, '150', '20', '30', '30', black, white);
                 pcAISocre = setAttributesForRect(pcAISocre, xOfPcAIScore, '20', '30', '30', black, white);
                 rectForTime = setAttributesForRect(rectForTime, '280', '20', '80', '30', black, white);
 
-                document.getElementById('svg-field').appendChild(rectForPlayerSore);
-                document.getElementById('svg-field').appendChild(pcAISocre);
-                document.getElementById('svg-field').appendChild(rectForTime);
+                fragment.appendChild(rectForPlayerSore);
+                fragment.appendChild(pcAISocre);
+                fragment.appendChild(rectForTime);
+                document.getElementById('svg-field').appendChild(fragment);
             }
         },
 
@@ -37,7 +39,7 @@ var SvgDrawer = (function () {
                     seconds;
                 textField.setAttribute('x', '300');
                 textField.setAttribute('y', '40');
-                textField.setAttribute('style', 'fill: #00ff00; stroke: #fff; font-size: 20px');
+                textField.setAttribute('style', 'fill: #00ff00; stroke: #fff; stroke-width: 0.5; font-size: 20px');
                 textField.setAttribute('width', '30');
                 textField.setAttribute('height', '30');
 
@@ -82,11 +84,6 @@ var SvgDrawer = (function () {
                         children[i].remove();
                     }
                 }
-                /*while(children[2] != undefined){
-                    children[2].remove();
-                }*/
-                //document.getElementById('svg-field').innerHTML = '<a xlink:href="https://github.com/TeamBarracuda-Telerik/JustDiscBattle" target="_blank" x="0" y="0" width="20" height="20">' +
-                //    '<image xlink:href="./Images/GitHub-Mark-32px.png" x="10" y="10" width="32" height="32" fill="none" stroke="none"/></a>';
             }
         }
     });
