@@ -1,7 +1,8 @@
 var SvgDrawer = (function () {
     var SvgDrawer = Object.create({}),
         black = '#000',
-        white = '#fff';
+        white = '#fff',
+        fontStyle = 'fill: #00ff00; stroke: #fff; stroke-width: 0.5; font-size: 20px';
 
     Object.defineProperties(SvgDrawer, {
         svgNS: {
@@ -39,7 +40,7 @@ var SvgDrawer = (function () {
                     seconds;
                 textField.setAttribute('x', '300');
                 textField.setAttribute('y', '40');
-                textField.setAttribute('style', 'fill: #00ff00; stroke: #fff; stroke-width: 0.5; font-size: 20px');
+                textField.setAttribute('style', fontStyle);
                 textField.setAttribute('width', '30');
                 textField.setAttribute('height', '30');
 
@@ -52,6 +53,26 @@ var SvgDrawer = (function () {
 
                 textField.innerHTML = minutes + " : " + seconds;
                 document.getElementById('svg-field').appendChild(textField);
+            }
+        },
+
+        drawScores: {
+            value: function (playerScore, pcAIscore) {
+                var pScore = document.createElementNS(this.svgNS, 'text'),
+                    aiScore = document.createElementNS(this.svgNS, 'text'),
+                    fragment = document.createDocumentFragment();
+                aiScore = setAttributesForRect(aiScore, '500', '40', '10', '10');
+                aiScore.setAttribute('style', fontStyle);
+                aiScore.innerHTML = pcAIscore;
+
+                pScore = setAttributesForRect(pScore, '160', '40', '10', '10');
+                pScore.setAttribute('style', fontStyle);
+                pScore.innerHTML = playerScore;
+
+                fragment.appendChild(pScore);
+                fragment.appendChild(aiScore);
+
+                document.getElementById('svg-field').appendChild(fragment);
             }
         },
 
@@ -88,24 +109,32 @@ var SvgDrawer = (function () {
         }
     });
 
-
     /**
      * @param {object} object
      * @param {string} x
      * @param {string} y
      * @param {string} width
      * @param {string} height
-     * @param {string} fillColor
-     * @param {string} strokeColor
+     * @param {string} [fillColor]
+     * @param {string} [strokeColor]
      * @returns {object}
      */
-    function setAttributesForRect(object, x, y, width, height, fillColor, strokeColor) {
+    function setAttributesForRect(object, x, y, width, height, fillColor , strokeColor) {
         object.setAttribute('x', x);
         object.setAttribute('y', y);
         object.setAttribute('width', width);
         object.setAttribute('height', height);
-        object.setAttribute('fill', fillColor);
-        object.setAttribute('stroke', strokeColor);
+
+        if(fillColor != undefined){
+
+            object.setAttribute('fill', fillColor);
+        }
+
+        if(strokeColor != undefined){
+
+            object.setAttribute('stroke', strokeColor);
+        }
+
         return object;
     }
 

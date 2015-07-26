@@ -22,6 +22,7 @@ function startGame() {
     SvgDrawer.clear(); // Clears all nodes in svg except <a> tag and it's content.
     SvgDrawer.drawForms();
     SvgDrawer.drawTime(_startTime);
+    SvgDrawer.drawScores(player.score, enemy.score);
 
     player.move();
     disc.move();
@@ -67,14 +68,33 @@ function startGame() {
         disc.velocity.y = Math.abs(disc.velocity.y);
     }
     // bounce off right wall
-    if (disc.x > canvasDrawer.canvasWidth - disc.radius) {
+    if (disc.x > canvasDrawer.canvasWidth - disc.radius && (disc.y < 120 || 240 < disc.y)) {
         disc.x = canvasDrawer.canvasWidth - disc.radius;
         disc.velocity.x = -Math.abs(disc.velocity.x);
     }
+
+    // goal in right side
+    if(disc.x >= canvasDrawer.canvasWidth && 120 < disc.y && disc.y < 240) {
+        disc.x = canvasDrawer.canvasWidth / 2;
+        disc.y = canvasDrawer.canvasHeight / 2;
+        disc.velocity.x = 0;
+        disc.velocity.y = 0;
+        player.score += 1;
+    }
+
     // bounce off left wall
-    if (disc.x < disc.radius) {
+    if (disc.x < disc.radius && (disc.y < 120 || 240 < disc.y)) {
         disc.x = disc.radius;
         disc.velocity.x = Math.abs(disc.velocity.x);
+    }
+
+    // goal in left side
+    if(disc.x <= 0 && 120 < disc.y && disc.y < 240) {
+        disc.x = canvasDrawer.canvasWidth / 2;
+        disc.y = canvasDrawer.canvasHeight / 2;
+        disc.velocity.x = 0;
+        disc.velocity.y = 0;
+        enemy.score += 1;
     }
 
     requestAnimationFrame(function () {
