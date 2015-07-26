@@ -79,7 +79,7 @@ var SvgDrawer = (function () {
         drawGitHubLogoLink: {
           value:  function (){
               var link = document.createElementNS(this.svgNS, 'a'),
-                  img = '<image xlink:href="./Images/GitHub-Mark-32px.png" x="10" y="10" width="32" height="32" fill="none" stroke="none" \/>';
+                  img = '<image xlink:href="./Images/GitHub-Mark-32px.png" x="10" y="10" width="32" height="32" fill="none" stroke="none"></image>';
               link.setAttributeNS(null, 'x', '0');
               link.setAttributeNS(null, 'y', '0');
               link.setAttributeNS(null, 'width', '20');
@@ -102,7 +102,9 @@ var SvgDrawer = (function () {
                         //skip and delete others
                         i += 1
                     } else {
-                        children[i].remove();
+                        var p = children[i].parentNode;
+                        p.removeChild(children[i]);
+                        //children[i].remove();
                     }
                 }
             }
