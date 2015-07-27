@@ -1,15 +1,10 @@
-var Player = (function () {
-    var Player = function (name, x, y, radius, isComputer) {
-        this.name = name;
-        this.x = x;
-        this.y = y;
-        this.radius = radius;
-        this.speed = 0;
-        this.isComputer = isComputer;
-        this.score = 0;
-        this.image = new Image();
-        this.image.src = './Images/player.png';
-    };
+var Player = (function (parent) {
+    Player.extends(parent);
+    
+    function Player(name, x, y, radius) {
+      parent.call(this, name, x, y, radius);
+        //this.imagePath = './Images/player.png'; //imagePath
+    }
 
     var lastMouseX = -1,
         lastMouseY = -1;
@@ -18,7 +13,7 @@ var Player = (function () {
 
         // Get mouse speed
         if (lastMouseX > -1) {
-            this.speed = Math.max(Math.abs(self.x - lastMouseX), Math.abs(self.y - lastMouseY));
+            self.speed = Math.max(Math.abs(self.x - lastMouseX), Math.abs(self.y - lastMouseY));
 
         }
 
@@ -36,14 +31,12 @@ var Player = (function () {
 
         canvas.addEventListener('mousemove', function(evt) {
             var mousePos = getMousePosition(canvas, evt);
-            if(mousePos.x < 325 && self.x < 325){
+            if(mousePos.x < 325 && self.x < 325) {
                 self.x = mousePos.x;
                 self.y = mousePos.y;
             }
-
         }, false);
     };
 
-
     return Player;
-}());
+}(Participant));
