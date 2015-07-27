@@ -9,12 +9,12 @@ var CanvasDrawer = (function () {
 
 
     CanvasDrawer.prototype = {
-        drawPlayer: function (player) {
+        drawParticipant: function (participant, color) {
             this.ctx.beginPath();
-            this.ctx.arc(player.x, player.y, player.radius,  0, 2 * Math.PI);
+            this.ctx.arc(participant.x, participant.y, participant.radius,  0, 2 * Math.PI);
             //this.ctx.drawImage(player.image, player.x - player.image.width / 2,
             //    player.y - player.radius, this.ctx.canvas.height / 15, this.ctx.canvas.height / 15);
-            this.ctx.fillStyle = 'red';
+            this.ctx.fillStyle = color;
             this.ctx.fill();
         },
         clear: function () {
@@ -27,12 +27,6 @@ var CanvasDrawer = (function () {
             this.ctx.fill();
             this.ctx.strokeStyle = 'black';
             this.ctx.stroke();
-        },
-        drawEnemy: function(enemy) {
-            this.ctx.beginPath();
-            this.ctx.arc(enemy.x, enemy.y, enemy.radius, 0, 2 * Math.PI);
-            this.ctx.fillStyle = 'blue';
-            this.ctx.fill();
         }
     };
 
