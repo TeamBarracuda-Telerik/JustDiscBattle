@@ -7,9 +7,14 @@ var canvasDrawer = new CanvasDrawer(),
     startPlayerY = 180,
     player = new Player('Pesho', startPlayerX, startPlayerY, participantRadius),
     disc = new Disc(canvasDrawer.canvasWidth / 2, canvasDrawer.canvasHeight / 2, 12),
-    enemy = new Enemy('Gosho', startEnemyX, startEnemyY, participantRadius);
+    enemy = new Enemy('Gosho', startEnemyX, startEnemyY, participantRadius),
+    hitWallSound = new Audio("Sounds/HitWall.wav"),
+    goalSound = new Audio("Sounds/WhatAGoal.wav"),
+    playerColissionSound = new Audio("Sounds/PlayerHitBall.wav");
 
 playField('playField', 0, 0, 640, 360);
+startGameSound = new Audio("Sounds/StartGame.wav");
+startGameSound.play();
 
 var _startTime = 0;
 function runTimer() {
@@ -56,21 +61,23 @@ function startGame() {
             disc.velocity.x += forceX;
             disc.velocity.y += forceY;
 
+            //playing sound
+            playerColissionSound.play();
+
             return true;
         } else {
             return false;
         }
     }
 
-    function detectDiscCollisionWithWalls(disc, canvasDrawer) {
+    function detectDiscCollisionWithWalls(disc, canvasDrawer){
 
         // bounce off the floor
         if (disc.y > canvasDrawer.canvasHeight - disc.radius) {
             disc.y = canvasDrawer.canvasHeight - disc.radius;
             disc.velocity.y = -Math.abs(disc.velocity.y);
             //playing sounds
-            var snd = new Audio("Sounds/HitWall.wav");
-            snd.play();
+            hitWallSound.play();
         }
 
         // bounce off ceiling
@@ -78,17 +85,25 @@ function startGame() {
             disc.y = disc.radius + 0;
             disc.velocity.y = Math.abs(disc.velocity.y);
             //playing sounds
-            var snd = new Audio("./Sounds/HitWall.wav");
-            snd.play();
+            hitWallSound.play();
         }
         // bounce off right wall
         if (disc.x > canvasDrawer.canvasWidth - disc.radius && (disc.y < 120 || 240 < disc.y)) {
             disc.x = canvasDrawer.canvasWidth - disc.radius;
             disc.velocity.x = -Math.abs(disc.velocity.x);
             //playing sounds
-            var snd = new Audio("./Sounds/HitWall.wav");
-            snd.play();
+            hitWallSound.play();
         }
+
+        // bounce off left wall
+        if (disc.x < disc.radius && (disc.y < 120 || 240 < disc.y)) {
+            disc.x = disc.radius;
+            disc.velocity.x = Math.abs(disc.velocity.x);
+            //playing sounds
+            hitWallSound.play();
+        }
+
+
 
         // goal in right side
         if (disc.x >= canvasDrawer.canvasWidth && 120 < disc.y && disc.y < 240) {
@@ -97,12 +112,10 @@ function startGame() {
             disc.velocity.x = 0;
             disc.velocity.y = 0;
             player.score += 1;
-        }
 
-        // bounce off left wall
-        if (disc.x < disc.radius && (disc.y < 120 || 240 < disc.y)) {
-            disc.x = disc.radius;
-            disc.velocity.x = Math.abs(disc.velocity.x);
+            //TODO: check score after 15 is game over
+            //playing sounds
+            goalSound.play();
         }
 
         // goal in left side
@@ -112,6 +125,10 @@ function startGame() {
             disc.velocity.x = 0;
             disc.velocity.y = 0;
             enemy.score += 1;
+
+            //TODO: check score after 15 is game over
+            //playing sounds
+            goalSound.play();
         }
     }
 

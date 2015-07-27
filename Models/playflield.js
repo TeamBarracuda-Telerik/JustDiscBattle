@@ -32,9 +32,11 @@ var playField = (function (onElement, x, y, fieldWidth, fieldHeight) {
         path.setAttribute('fill', 'none');
 
         svgField.applyAirBlowers = function (airBlowers) {
+            var fragment = document.createDocumentFragment();
             airBlowers.map(function (airblower) {
-                svgField.appendChild(airblower);
+                fragment.appendChild(airblower);
             });
+            svgField.appendChild(fragment);
         };
 
         function createCircleInMiddle(radius, fillColor) {
@@ -117,15 +119,18 @@ var playField = (function (onElement, x, y, fieldWidth, fieldHeight) {
             leftLine = strokedLine(0),
             rightLine = strokedLine(fieldWidth);
 
-        svgField.appendChild(leftHalf);
-        svgField.appendChild(rightHalf);
-        svgField.appendChild(path);
-        svgField.appendChild(outerCircle);
-        svgField.appendChild(innerCircle);
-        svgField.appendChild(humanDoor);
-        svgField.appendChild(enemyDoor);
-        svgField.appendChild(leftLine);
-        svgField.appendChild(rightLine);
+        var fragment = document.createDocumentFragment();
+        fragment.appendChild(leftHalf);
+        fragment.appendChild(rightHalf);
+        fragment.appendChild(path);
+        fragment.appendChild(outerCircle);
+        fragment.appendChild(innerCircle);
+        fragment.appendChild(humanDoor);
+        fragment.appendChild(enemyDoor);
+        fragment.appendChild(leftLine);
+        fragment.appendChild(rightLine);
+
+        svgField.appendChild(fragment);
         svgField.applyAirBlowers(airBlowers);
     };
 
