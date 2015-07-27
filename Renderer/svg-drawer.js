@@ -1,7 +1,8 @@
 var SvgDrawer = (function () {
     var SvgDrawer = Object.create({}),
         black = '#000',
-        white = '#fff';
+        white = '#fff',
+        fontStyle = 'fill: #00ff00; stroke: #fff; stroke-width: 0.5; font-size: 20px';
 
     Object.defineProperties(SvgDrawer, {
         svgNS: {
@@ -15,18 +16,20 @@ var SvgDrawer = (function () {
 
         drawForms: {
             value: function () {
-                var xOfPcAIScore = (640 - 150).toString();
-                var rectForPlayerSore = document.createElementNS(this.svgNS, 'rect');
-                var pcAISocre = document.createElementNS(this.svgNS, 'rect');
-                var rectForTime = document.createElementNS(this.svgNS, 'rect');
+                var xOfPcAIScore = (640 - 150).toString(),
+                    rectForPlayerSore = document.createElementNS(this.svgNS, 'rect'),
+                    pcAISocre = document.createElementNS(this.svgNS, 'rect'),
+                    rectForTime = document.createElementNS(this.svgNS, 'rect'),
+                    fragment =  document.createDocumentFragment();
 
                 rectForPlayerSore = setAttributesForRect(rectForPlayerSore, '150', '20', '30', '30', black, white);
                 pcAISocre = setAttributesForRect(pcAISocre, xOfPcAIScore, '20', '30', '30', black, white);
                 rectForTime = setAttributesForRect(rectForTime, '280', '20', '80', '30', black, white);
 
-                document.getElementById('svg-field').appendChild(rectForPlayerSore);
-                document.getElementById('svg-field').appendChild(pcAISocre);
-                document.getElementById('svg-field').appendChild(rectForTime);
+                fragment.appendChild(rectForPlayerSore);
+                fragment.appendChild(pcAISocre);
+                fragment.appendChild(rectForTime);
+                document.getElementById('svg-field').appendChild(fragment);
             }
         },
 
@@ -37,7 +40,7 @@ var SvgDrawer = (function () {
                     seconds;
                 textField.setAttribute('x', '300');
                 textField.setAttribute('y', '40');
-                textField.setAttribute('style', 'fill: #00ff00; stroke: #fff; font-size: 20px');
+                textField.setAttribute('style', fontStyle);
                 textField.setAttribute('width', '30');
                 textField.setAttribute('height', '30');
 
@@ -53,10 +56,30 @@ var SvgDrawer = (function () {
             }
         },
 
+        drawScores: {
+            value: function (playerScore, pcAIscore) {
+                var pScore = document.createElementNS(this.svgNS, 'text'),
+                    aiScore = document.createElementNS(this.svgNS, 'text'),
+                    fragment = document.createDocumentFragment();
+                aiScore = setAttributesForRect(aiScore, '500', '40', '10', '10');
+                aiScore.setAttribute('style', fontStyle);
+                aiScore.innerHTML = pcAIscore;
+
+                pScore = setAttributesForRect(pScore, '160', '40', '10', '10');
+                pScore.setAttribute('style', fontStyle);
+                pScore.innerHTML = playerScore;
+
+                fragment.appendChild(pScore);
+                fragment.appendChild(aiScore);
+
+                document.getElementById('svg-field').appendChild(fragment);
+            }
+        },
+
         drawGitHubLogoLink: {
           value:  function (){
               var link = document.createElementNS(this.svgNS, 'a'),
-                  img = '<image xlink:href="./Images/GitHub-Mark-32px.png" x="10" y="10" width="32" height="32" fill="none" stroke="none" \/>';
+                  img = '<image xlink:href="./Images/GitHub-Mark-32px.png" x="10" y="10" width="32" height="32" fill="none" stroke="none"></image>';
               link.setAttributeNS(null, 'x', '0');
               link.setAttributeNS(null, 'y', '0');
               link.setAttributeNS(null, 'width', '20');
@@ -79,18 +102,14 @@ var SvgDrawer = (function () {
                         //skip and delete others
                         i += 1
                     } else {
-                        children[i].remove();
+                        var p = children[i].parentNode;
+                        p.removeChild(children[i]);
+                        //children[i].remove();
                     }
                 }
-                /*while(children[2] != undefined){
-                    children[2].remove();
-                }*/
-                //document.getElementById('svg-field').innerHTML = '<a xlink:href="https://github.com/TeamBarracuda-Telerik/JustDiscBattle" target="_blank" x="0" y="0" width="20" height="20">' +
-                //    '<image xlink:href="./Images/GitHub-Mark-32px.png" x="10" y="10" width="32" height="32" fill="none" stroke="none"/></a>';
             }
         }
     });
-
 
     /**
      * @param {object} object
@@ -98,17 +117,26 @@ var SvgDrawer = (function () {
      * @param {string} y
      * @param {string} width
      * @param {string} height
-     * @param {string} fillColor
-     * @param {string} strokeColor
+     * @param {string} [fillColor]
+     * @param {string} [strokeColor]
      * @returns {object}
      */
-    function setAttributesForRect(object, x, y, width, height, fillColor, strokeColor) {
+    function setAttributesForRect(object, x, y, width, height, fillColor , strokeColor) {
         object.setAttribute('x', x);
         object.setAttribute('y', y);
         object.setAttribute('width', width);
         object.setAttribute('height', height);
-        object.setAttribute('fill', fillColor);
-        object.setAttribute('stroke', strokeColor);
+
+        if(fillColor != undefined){
+
+            object.setAttribute('fill', fillColor);
+        }
+
+        if(strokeColor != undefined){
+
+            object.setAttribute('stroke', strokeColor);
+        }
+
         return object;
     }
 

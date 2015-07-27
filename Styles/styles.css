@@ -3,7 +3,7 @@ body{
 }
 
 #svg-field {
-    background: url("../Images/scoreboard.jpg");
+    background: url("../Images/bgScoreboard.jpg");
     border: 1px solid black;
     padding: 0;
     margin: auto;
