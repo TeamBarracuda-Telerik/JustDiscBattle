@@ -68,17 +68,26 @@ function startGame() {
         if (disc.y > canvasDrawer.canvasHeight - disc.radius) {
             disc.y = canvasDrawer.canvasHeight - disc.radius;
             disc.velocity.y = -Math.abs(disc.velocity.y);
+            //playing sounds
+            var snd = new Audio("Sounds/HitWall.wav");
+            snd.play();
         }
 
         // bounce off ceiling
         if (disc.y < disc.radius + 0) {
             disc.y = disc.radius + 0;
             disc.velocity.y = Math.abs(disc.velocity.y);
+            //playing sounds
+            var snd = new Audio("./Sounds/HitWall.wav");
+            snd.play();
         }
         // bounce off right wall
         if (disc.x > canvasDrawer.canvasWidth - disc.radius && (disc.y < 120 || 240 < disc.y)) {
             disc.x = canvasDrawer.canvasWidth - disc.radius;
             disc.velocity.x = -Math.abs(disc.velocity.x);
+            //playing sounds
+            var snd = new Audio("./Sounds/HitWall.wav");
+            snd.play();
         }
 
         // goal in right side
