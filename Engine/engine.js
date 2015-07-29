@@ -10,7 +10,8 @@ var canvasDrawer = new CanvasDrawer(),
     enemy = new Enemy('Gosho', startEnemyX, startEnemyY, participantRadius),
     hitWallSound = new Audio("Sounds/HitWall.wav"),
     goalSound = new Audio("Sounds/WhatAGoal.wav"),
-    playerColissionSound = new Audio("Sounds/PlayerHitBall.wav");
+    playerColissionSound = new Audio("Sounds/PlayerHitBall.wav"),
+	difficulty = 5;
 
 playField('playField', 0, 0, 640, 360);
 startGameSound = new Audio("Sounds/StartGame.wav");
@@ -39,7 +40,7 @@ function startGame() {
     detectCollisionWithDisc(player, disc);
     detectCollisionWithDisc(enemy, disc);
     detectDiscCollisionWithWalls(disc, canvasDrawer);
-    moveEnemy();
+    moveEnemy(difficulty);
 
     function detectCollisionWithDisc(player, disc) {
         var dx = player.x - disc.x,
@@ -170,9 +171,15 @@ function startGame() {
 
     // TODO
     function getEnemyMoveSpeed(){
+        var dx = enemy.x - disc.x + 2.5,
+            dy = enemy.y - disc.y + 2.5,
+            distance = Math.sqrt(dx * dx + dy * dy);
+
+        distance = distance === 0 ? 0.1 : distance;
+
         return {
-            x: 2.5,
-            y: 2.5
+            x: Math.abs((dx / distance) * difficulty),
+            y: Math.abs((dy / distance) * difficulty)
         }
     }
 
