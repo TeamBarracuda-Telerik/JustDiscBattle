@@ -24,7 +24,7 @@ define(['player', 'enemy', 'disc','playfield','canvas-drawer', 'svg-drawer'],
           _startTime++;
       }
 
-      setInterval(runTimer, 1000);
+    //   setInterval(runTimer, 1000);
 
       function startGame() {
           canvasDrawer.clear();
