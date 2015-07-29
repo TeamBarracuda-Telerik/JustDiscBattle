@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>The Game</title>
     <link href="Styles/styles.css" rel="stylesheet"/>
-    <script src="Library/kinetic-v5.1.0.min.js"></script>
 </head>
 <body>
 <svg id="svg-field" width="640" height="80">
@@ -14,13 +13,6 @@
 </svg>
 <svg id="playField" width="640px" height="360px"></svg>
 <canvas id="canvas-field" width="640" height="360"></canvas>
-<script src="Renderer/canvas-drawer.js"></script>
-<script src="Renderer/svg-drawer.js"></script>
-<script src="Models/participant.js"></script>
-<script src="Models/player.js"></script>
-<script src="Models/enemy.js"></script>
-<script src="Models/disc.js"></script>
-<script src="Models/playflield.js"></script>
-<script src="Engine/engine.js"></script>
+<script data-main="Scripts/app" src="Scripts/Library/require.js"></script>
 </body>
 </html>
