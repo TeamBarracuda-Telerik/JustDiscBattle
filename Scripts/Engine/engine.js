@@ -32,7 +32,7 @@ define(['player', 'enemy', 'disc','playfield','canvas-drawer', 'svg-drawer'],
           canvasDrawer.drawParticipant(enemy, "blue");
           canvasDrawer.drawDisc(disc);
 
-          SvgDrawer.clear(); // Clears all nodes in svg except <a> tag and it's content.
+          SvgDrawer.clear(); // Clears all nodes in svg except <a> tag and its content.
           SvgDrawer.drawForms();
           SvgDrawer.drawTime(_startTime);
           SvgDrawer.drawScores(player.score, enemy.score);
