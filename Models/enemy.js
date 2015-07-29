@@ -3,7 +3,8 @@ var Enemy = (function (parent) {
 
     function Enemy(name, x, y, radius) {
         parent.call(this, name, x, y, radius);
-        //this.imagePath = './Images/enemy.png'; //imagePath
+        this.image = new Image();
+        this.image.src = './Images/enemy.png'; //imagePath
         this.velocity = {
             x: 0,
             y: 0

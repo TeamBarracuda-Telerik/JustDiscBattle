@@ -3,7 +3,8 @@ var Player = (function (parent) {
     
     function Player(name, x, y, radius) {
       parent.call(this, name, x, y, radius);
-        //this.imagePath = './Images/player.png'; //imagePath
+      this.image = new Image();
+      this.image.src = './Images/player.png'; //imagePath
     }
 
     var lastMouseX = -1,

@@ -12,10 +12,9 @@ var CanvasDrawer = (function () {
         drawParticipant: function (participant, color) {
             this.ctx.beginPath();
             this.ctx.arc(participant.x, participant.y, participant.radius,  0, 2 * Math.PI);
-            //this.ctx.drawImage(player.image, player.x - player.image.width / 2,
-            //    player.y - player.radius, this.ctx.canvas.height / 15, this.ctx.canvas.height / 15);
             this.ctx.fillStyle = color;
             this.ctx.fill();
+			this.ctx.drawImage(participant.image, participant.x - 17, participant.y - 17, 35, 35);
         },
         clear: function () {
             this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
