@@ -16,7 +16,8 @@ define(['player', 'enemy', 'disc', "constants", "sound-player", "renderer", "sta
 			// beautify
 					  
 			Engine.prototype = {
-				startGame : function startGame() {
+				startGame : function startGame(difficulty) {
+					difficultyLevel = difficulty || 5;
 					Renderer.drawCanvas(game);
 					Renderer.drawSVG(game);
 					moveDisc(game);
@@ -28,7 +29,7 @@ define(['player', 'enemy', 'disc', "constants", "sound-player", "renderer", "sta
 			
 			// initialize
 			function initializeGame(game){
-				StartMenu.draw();
+				//StartMenu.draw();
 				SoundPlayer.playStartGameSound();
 				Renderer.drawPlayField();
 				//TODO: get name from start screen

@@ -1,4 +1,4 @@
-define(function () {
+define(["engine"],function (engine) {
     /* global Kinetic */
     var StartMenu = (function () {
         function StartMenu() {
@@ -305,7 +305,6 @@ define(function () {
 
 
                 // visualizePlayField();
-                console.log('Start clicked');
 
                 layer.draw();
             }
@@ -343,14 +342,41 @@ define(function () {
             exitButton.on('click', exitButtonEventHandler);
             exitButtonText.on('click', exitButtonEventHandler);
 
-            difficultyEasyButton.on('click', function(){
+            function clearStartMenu(){
+                svgAndCanvasContainer.className = '';
+                var element = document.getElementById('start-menu-container');
+                element.className = '';
+                while (element.firstChild) {
+                    element.removeChild(element.firstChild);
+                }
+                if (element) {
+                    element.parentNode.removeChild(element);
+                }
+            }
 
+            difficultyEasyButton.on('click', function() {
+                clearStartMenu();
+                engine.startGame();
             });
-            difficultyMediumButton.on('click', function(){
-
+            difficultyEasyText.on('click', function() {
+                clearStartMenu();
+                engine.startGame();
+            });
+            difficultyMediumButton.on('click', function() {
+                clearStartMenu();
+                engine.startGame();
+            });
+            difficultyMediumText.on('click', function() {
+                clearStartMenu();
+                engine.startGame();
             });
             difficultyHardButton.on('click', function(){
-
+                clearStartMenu();
+                engine.startGame();
+            });
+            difficultyHardText.on('click', function(){
+                clearStartMenu();
+                engine.startGame();
             });
 
 
