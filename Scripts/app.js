@@ -15,7 +15,7 @@
         }
     });
 
-    require(["engine"], function (engine) {
-        engine.startGame();
+    require(["startMenu"], function (startMenu) {
+        startMenu.draw();
     });
 }());
