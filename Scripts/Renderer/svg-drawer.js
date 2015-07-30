@@ -1,11 +1,18 @@
-define(function () {
-    var SvgDrawer = (function () {
+define(["constants"], function (CONSTS) {
+    var SvgDrawer = (function (svgNS) {
         var SvgDrawer = Object.create({}),
             black = '#000',
             white = '#fff',
             fontStyle = 'fill: #00ff00; stroke: #fff; stroke-width: 0.5; font-size: 20px';
+			
 
         Object.defineProperties(SvgDrawer, {
+			init: {
+				value: function (svgNS) {
+					this.svgNS = svgNS;
+					return this;
+				}
+			},
             svgNS: {
                 get: function () {
                     return this._svgNS;
@@ -56,6 +63,31 @@ define(function () {
                     document.getElementById('svg-field').appendChild(textField);
                 }
             },
+			
+			drawNames: {
+				value: function (playerName, enemyName) {
+					var playerNameField = document.createElementNS(this.svgNS, 'text'),
+						enemyNameField = document.createElementNS(this.svgNS, 'text'),
+						fontStyleName = 'fill: #00ff00; stroke: #fff; stroke-width: 0.5; font-size: 15px';
+						
+						playerNameField.setAttribute('x', '150');
+						playerNameField.setAttribute('y', '70');
+						playerNameField.setAttribute('style', fontStyleName);
+						playerNameField.setAttribute('width', '30');
+						playerNameField.setAttribute('height', '30');
+						playerNameField.innerHTML = playerName;
+						
+						enemyNameField.setAttribute('x', '475');
+						enemyNameField.setAttribute('y', '70');
+						enemyNameField.setAttribute('style', fontStyleName);
+						enemyNameField.setAttribute('width', '30');
+						enemyNameField.setAttribute('height', '30');
+						enemyNameField.innerHTML = enemyName;
+						
+						document.getElementById('svg-field').appendChild(playerNameField);
+						document.getElementById('svg-field').appendChild(enemyNameField);
+				}
+			},
 
             drawScores: {
                 value: function (playerScore, pcAIscore) {
@@ -92,6 +124,180 @@ define(function () {
                     document.getElementById('svg-field').appendChild(link);
                 }
             },
+			
+			drawPlayField : {
+				value : function() {
+				var svgField =  document.getElementById('playField'),
+				x = 0,
+				y = 0,
+				fieldWidth = CONSTS.playfield.width,
+				fieldHeight = CONSTS.playfield.height,
+				middleFieldWidth = fieldWidth / 2,
+                middleFieldHeight = fieldHeight / 2,
+                circleRadius = 42;
+				
+			var leftHalf = document.createElementNS(svgNS, 'rect');
+            leftHalf.setAttribute('x', x);
+            leftHalf.setAttribute('y', y);
+            leftHalf.setAttribute('width', fieldWidth / 2);
+            leftHalf.setAttribute('height', fieldHeight);
+            leftHalf.setAttribute('fill', '#FF7383');
+            leftHalf.setAttribute('stroke', 'black');
+
+            var rightHalf = document.createElementNS(svgNS, 'rect');
+            rightHalf.setAttribute('x', fieldWidth / 2);
+            rightHalf.setAttribute('y', y);
+            rightHalf.setAttribute('width', fieldWidth / 2);
+            rightHalf.setAttribute('height', fieldHeight);
+            rightHalf.setAttribute('fill', '#99BDFF');
+            rightHalf.setAttribute('stroke', 'black');
+
+
+            var path = document.createElementNS(svgNS, 'path');
+            path.setAttribute('stroke-dasharray', '7, 7');
+            path.setAttribute('d', 'M ' + middleFieldWidth + ' ' + 0 + ' ' + 'L' + middleFieldWidth + ' ' + fieldHeight);
+            path.setAttribute('stroke', 'white');
+            path.setAttribute('stroke-width', 3);
+            path.setAttribute('fill', 'none');
+
+            svgField.applyAirBlowers = function (airBlowers) {
+                var fragment = document.createDocumentFragment();
+                airBlowers.map(function (airblower) {
+                    fragment.appendChild(airblower);
+                });
+
+                svgField.appendChild(fragment);
+            };
+
+            function createCircleInMiddle(radius, fillColor) {
+                var circle = document.createElementNS(svgNS, 'circle');
+                circle.setAttribute('cx', middleFieldWidth);
+                circle.setAttribute('cy', middleFieldHeight);
+                circle.setAttribute('r', radius);
+                circle.setAttribute('stroke', 'black');
+                circle.setAttribute('fill', fillColor);
+
+                return circle;
+            }
+
+            function strokedLine(x) {
+                var path = document.createElementNS(svgNS, 'path');
+                path.setAttribute('d', 'M ' + x + ' ' + 0 + ' ' + 'L' + x + ' ' + fieldHeight);
+                path.setAttribute('stroke', 'black');
+                path.setAttribute('stroke-width', 4);
+
+                return path;
+            }
+
+            function createAirBlowers(fieldWidth, fieldHeight) {
+                var width = fieldWidth,
+                    height = fieldHeight,
+                    airBlowerRadius = 1.7,
+                    airBlowers = [];
+
+                for (var y = 40; y <= height - 40; y += 40) {
+                    for (var x = 40; x <= width - 40; x += 40) {
+                        var circle = document.createElementNS(svgNS, 'circle');
+                        circle.setAttribute('cx', x);
+                        circle.setAttribute('cy', y);
+                        circle.setAttribute('r', airBlowerRadius);
+                        circle.setAttribute('stroke', 'black');
+                        circle.setAttribute('fill', 'white');
+
+                        if (x < (width / 2) - 40 || x > (width / 2) + 40) {
+                            airBlowers.push(circle);
+                        }
+                    }
+                }
+
+                return airBlowers;
+            }
+
+            function createHumanPlayerDoor(fieldWidth, fieldHeight) {
+                var humanArchDoor = document.createElementNS(svgNS, 'path'),
+                    doorheight = (fieldHeight / 3) | 0,
+                    startDoorY = (fieldHeight / 2) - (doorheight / 2),
+                    endDoorY = (fieldHeight / 2) + (doorheight / 2);
+
+                humanArchDoor.setAttribute('d', 'M ' + 0 + ' ' + startDoorY + ' A ' + 400 + ' ' + 210 + ' 0 0 1 ' + 0 + ' ' + endDoorY);
+                humanArchDoor.setAttribute('stroke', 'black');
+                humanArchDoor.setAttribute('fill', 'white');
+
+                return humanArchDoor
+            }
+
+            function createEnemyPlayerDoor(fieldWidth, fieldHeight) {
+                var enemyArchDoor = document.createElementNS(svgNS, 'path'),
+                    doorheight = (fieldHeight / 3) | 0,
+                    startDoorY = (fieldHeight / 2) - (doorheight / 2),
+                    endDoorY = (fieldHeight / 2) + (doorheight / 2);
+
+                enemyArchDoor.setAttribute('d', 'M ' + fieldWidth + ' ' + startDoorY + ' ' + ' A ' + 400 + ' ' + 210 + ' 0 0 0 ' + fieldWidth + ' ' + endDoorY);
+                enemyArchDoor.setAttribute('stroke', 'black');
+                enemyArchDoor.setAttribute('fill', 'white');
+
+                return enemyArchDoor;
+            }
+
+
+            var humanDoor = createHumanPlayerDoor(fieldWidth, fieldHeight),
+                enemyDoor = createEnemyPlayerDoor(fieldWidth, fieldHeight),
+                airBlowers = createAirBlowers(fieldWidth, fieldHeight),
+                innerCircle = createCircleInMiddle((circleRadius - 15), '#454545'),
+                outerCircle = createCircleInMiddle(circleRadius, 'white'),
+                leftLine = strokedLine(0),
+                rightLine = strokedLine(fieldWidth);
+
+            var fragment = document.createDocumentFragment();
+            fragment.appendChild(leftHalf);
+            fragment.appendChild(rightHalf);
+            fragment.appendChild(path);
+            fragment.appendChild(outerCircle);
+            fragment.appendChild(innerCircle);
+            fragment.appendChild(humanDoor);
+            fragment.appendChild(enemyDoor);
+            fragment.appendChild(leftLine);
+            fragment.appendChild(rightLine);
+            svgField.appendChild(fragment);
+            svgField.applyAirBlowers(airBlowers);
+        
+			document.getElementById('playField').style.cursor = "none";
+			document.getElementById('canvas-field').style.cursor = "none";
+					//var playfield = new PlayField('playField', 0, 0, CONSTS.playfield.width, CONSTS.playfield.height);
+				}
+			},
+			// TODO : beautify
+			drawWin : {
+			    value: function (text) {
+					var endGameField = document.createElementNS(this.svgNS, 'text'),
+						fontStyle = 'fill: #00ff00; stroke: #fff; stroke-width: 0.5; font-size: 50px';
+
+						endGameField.setAttribute('x', '230');
+						endGameField.setAttribute('y', '100');
+						endGameField.setAttribute('style', fontStyle);
+						endGameField.setAttribute('width', '30');
+						endGameField.setAttribute('height', '30');
+						endGameField.innerHTML = text;
+
+					document.getElementById('playField').appendChild(endGameField);
+				}
+			},
+			
+			drawGameOver : {
+			    value: function (text) {
+					var endGameField = document.createElementNS(this.svgNS, 'text'),
+						fontStyle = 'fill: #00ff00; stroke: #fff; stroke-width: 0.5; font-size: 50px';
+
+						endGameField.setAttribute('x', '195');
+						endGameField.setAttribute('y', '100');
+						endGameField.setAttribute('style', fontStyle);
+						endGameField.setAttribute('width', '30');
+						endGameField.setAttribute('height', '30');
+						endGameField.innerHTML = text;
+
+					document.getElementById('playField').appendChild(endGameField);
+				}
+			},
 
             clear: {
                 value: function () {
@@ -141,8 +347,8 @@ define(function () {
             return object;
         }
 
-        return SvgDrawer;
-    }());
+        return SvgDrawer.init('http://www.w3.org/2000/svg');
+    }('http://www.w3.org/2000/svg'));
 
     return SvgDrawer;
 });
