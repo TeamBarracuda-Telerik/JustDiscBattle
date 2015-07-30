@@ -5,10 +5,13 @@
             "enemy": "Models/enemy",
             "disc": "Models/disc",
             "participant": "Models/participant",
-            "playfield" : "Models/playfield",
+            "startMenu" : 'Renderer/start-menu-renderer',
             "engine" : "Engine/engine",
             "canvas-drawer" : "Renderer/canvas-drawer",
-            "svg-drawer": "Renderer/svg-drawer"
+            "svg-drawer": "Renderer/svg-drawer",
+			"renderer": "Renderer/renderer",
+			"constants": "Common/constants",
+			"sound-player": "Common/sound-player"
         }
     });
 

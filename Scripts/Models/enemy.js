@@ -2,8 +2,9 @@ define(["participant"], function (Participant) {
     var Enemy = (function (parent) {
         Enemy.extends(parent);
 
-        function Enemy(name, x, y, radius) {
+        function Enemy(name, x, y, radius, difficulty) {
             parent.call(this, name, x, y, radius);
+            this.difficulty = difficulty;
             this.image = new Image();
             this.image.src = './Images/Ninja_circle_blue.png'; //imagePath
             this.velocity = {
@@ -16,50 +17,38 @@ define(["participant"], function (Participant) {
             }
         }
 
-        Enemy.prototype.move = function (direction, speed) {
-            switch (direction) {
-                case "left":
-                    this.x -= speed - this.velocity.x;
-                    break;
-                case "right":
-                    this.x += speed + this.velocity.x;
-                    break;
-                case "up":
-                    this.y -= speed - this.velocity.y;
-                    break;
-                case "down":
-                    this.y += speed + this.velocity.y;
-                    break;
-            }
-        };
-
-        Enemy.prototype.reset = function () {
-            var resetSpeed = getEnemyResetSpeed(this, this.startPosition);
-
-            resetEnemyX(this, resetSpeed, this.startPosition);
-            if (this.y > this.startPosition.y) {
-                resetEnemyY(this, resetSpeed, this.startPosition, -1);
-            } else {
-                resetEnemyY(this, resetSpeed, this.startPosition);
-            }
-        };
-
-        // reset helper functions
-        function resetEnemyX(enemy, resetSpeed, startPosition) {
-            var enemyX = enemy.x + resetSpeed.x;
-            enemy.x = enemyX > startPosition.x ? startPosition.x : enemyX;
-        }
-
-        function resetEnemyY(enemy, resetSpeed, startPosition, direction) {
-            var direction = direction || 1,
-                enemyY = enemy.y + resetSpeed.y * direction;
-
-            if (direction < 0) {
-                enemy.y = enemyY < startPosition.y ? startPosition.y : enemyY;
-            } else {
-                enemy.y = enemyY > startPosition.y ? startPosition.y : enemyY;
-            }
-        }
+        Enemy.prototype = {
+			move : function (direction, speed) {
+				switch (direction) {
+					case "left":
+						this.x -= speed - this.velocity.x;
+						break;
+					case "right":
+						this.x += speed + this.velocity.x;
+						break;
+					case "up":
+						this.y -= speed - this.velocity.y;
+						break;
+					case "down":
+						this.y += speed + this.velocity.y;
+						break;
+				}
+			},
+			reset : function () {
+				var resetSpeed = getEnemyResetSpeed(this, this.startPosition);
+				
+				this.move("right", resetSpeed.x);
+				this.x = this.x > this.startPosition.x ? this.startPosition.x : this.x;
+				
+				if (this.y > this.startPosition.y) {
+					this.move("up", resetSpeed.y);
+					this.y = this.y < this.startPosition.y ? this.startPosition.y : this.y;
+				} else {
+					this.move("down", resetSpeed.y);
+					this.y = this.y > this.startPosition.y ? this.startPosition.y : this.y;
+				}
+			}
+		};
 
         function getEnemyResetSpeed(enemy, startPosition) {
             var dx = enemy.x - startPosition.x,

@@ -10,19 +10,27 @@ define(function () {
                 x: 0,
                 y: 0
             };
+			this.startPosition = {
+                'x': x,
+                'y': y
+            };
         };
 
         Disc.prototype = {
-            move: function () {
+            move: function move() {
                 this.velocity.x *= dampeningFactor;
                 this.velocity.y *= dampeningFactor;
 
                 // Add velocity to position
-
                 this.x += this.velocity.x;
                 this.y += this.velocity.y;
-
-            }
+            },
+			reset: function reset() {
+				this.x = this.startPosition.x;
+				this.y = this.startPosition.y;
+				this.velocity.x = 0;
+				this.velocity.y = 0;
+			}
         };
 
         return Disc;

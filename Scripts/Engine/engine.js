@@ -1,198 +1,214 @@
-define(['player', 'enemy', 'disc','playfield','canvas-drawer', 'svg-drawer'],
-    function (Player, Enemy, Disc, PlayField, canvasDrawer, SvgDrawer) {
-  var Engine = (function () {
-      SvgDrawer.svgNS = 'http://www.w3.org/2000/svg';
-      var startEnemyX = canvasDrawer.canvasWidth - 20,
-          startEnemyY = canvasDrawer.canvasHeight / 2,
-          participantRadius = 15,
-          startPlayerX = 20,
-          startPlayerY = 180,
-          player = new Player('Pesho', startPlayerX, startPlayerY, participantRadius),
-          disc = new Disc(canvasDrawer.canvasWidth / 2, canvasDrawer.canvasHeight / 2, 12),
-          enemy = new Enemy('Gosho', startEnemyX, startEnemyY, participantRadius),
-          hitWallSound = new Audio("Sounds/HitWall.wav"),
-          goalSound = new Audio("Sounds/WhatAGoal.wav"),
-          playerColissionSound = new Audio("Sounds/PlayerHitBall.wav"),
-          difficulty = 5,
-          playfield = new PlayField('playField', 0, 0, 640, 360);
+define(['player', 'enemy', 'disc', "constants", "sound-player", "renderer", "startMenu"],
+    function (Player, Enemy, Disc, CONSTS, SoundPlayer, Renderer, StartMenu) {
+		var Engine = (function () {
+			var game,	
+				requestId,
+				timeId;				
+			var Engine = function(){
+				game = this;
+				initializeGame(game);					
+			};
+			
+			// TODO:
+			// remove playfield module
+			// get name and difficulty from userinput
+			// hande game end - draw better end screens; add restart button
+			// beautify
+					  
+			Engine.prototype = {
+				startGame : function startGame() {
+					Renderer.drawCanvas(game);
+					Renderer.drawSVG(game);
+					moveDisc(game);
+					moveEnemy(game);
+					requestId = requestAnimationFrame(startGame);					
+					endGame(game);
+				}
+			};
+			
+			// initialize
+			function initializeGame(game){
+				StartMenu.draw();
+				SoundPlayer.playStartGameSound();
+				Renderer.drawPlayField();
+				//TODO: get name from start screen
+				game.player = new Player(CONSTS.player.name, CONSTS.player.start.x, CONSTS.player.start.y, CONSTS.participantRadius);
+				game.enemy = new Enemy(CONSTS.enemy.name, CONSTS.enemy.start.x, CONSTS.enemy.start.y, CONSTS.participantRadius);
+				game.disc = new Disc(CONSTS.startDisc.x, CONSTS.startDisc.y, CONSTS.startDisc.radius);
+				//TODO: get difficulty from start screen
+				game.difficulty = CONSTS.gameDifficulty;
+				game.time = CONSTS.startTime;
+				initializeTimer();
+				movePlayer(Renderer.canvas, game.player);
+			}
 
-      startGameSound = new Audio("Sounds/StartGame.wav");
-      startGameSound.play();
+			function initializeTimer(){
+				function runTimer() {
+					++game.time;
+				}
 
-      var _startTime = 0;
-      function runTimer() {
-          _startTime++;
-      }
+				timeId = setInterval(runTimer, 1000);
+			}
 
-    //   setInterval(runTimer, 1000);
+			// player movement
+			function movePlayer(canvas, player) {
+				canvas.addEventListener('mousemove', function(evt) {
+					movePlayerWithMouse(evt, canvas, player)
+				}, false);
+				// canvas.addEventListener('touchmove', function(evt) {
+					// movePlayerWithMouse(evt, canvas, player)
+				// }, false);
+			}
+				
+			function movePlayerWithMouse(evt, canvas, player){
+				var mousePos = getMousePosition(canvas, evt);
+				if(mousePos.x < CONSTS.playfield.middle + 5 && player.x < CONSTS.playfield.middle + 5) {
+					player.move(mousePos);
+				}
+			}
+			
+			function getMousePosition(canvas, evt) {
+				var rect = canvas.getBoundingClientRect();
+				return {
+					x: evt.clientX - rect.left,
+					y: evt.clientY - rect.top
+				};
+			}
+			
+			// enemy movement
+			function moveEnemy(game) {
+				var speed = getEnemyMoveSpeed(game.enemy, game.disc, game.difficulty);			
+				if (game.disc.x > CONSTS.playfield.middle) {
+					// move enemy x
+					if (game.disc.x >= game.enemy.x) {
+						game.enemy.reset();
+					} else {
+						game.enemy.move("left", speed.x);
+						// move enemy y
+						if (game.disc.y < game.enemy.y) {
+							game.enemy.move("up", speed.y);
+						} else if (game.disc.y > game.enemy.y) {
+							game.enemy.move("down", speed.y);
+						}
+					}
+				} else {
+					game.enemy.reset();
+				}
+			}
+			
+			function getEnemyMoveSpeed(enemy, disc, difficulty) {
+				var dx = enemy.x - disc.x + 2.5,
+					dy = enemy.y - disc.y + 2.5,
+					distance = Math.sqrt(dx * dx + dy * dy);
 
-      function startGame() {
-          canvasDrawer.clear();
-          canvasDrawer.drawParticipant(player, "red");
-          canvasDrawer.drawParticipant(enemy, "blue");
-          canvasDrawer.drawDisc(disc);
+				distance = distance === 0 ? 0.1 : distance;
 
-          SvgDrawer.clear(); // Clears all nodes in svg except <a> tag and its content.
-          SvgDrawer.drawForms();
-          SvgDrawer.drawTime(_startTime);
-          SvgDrawer.drawScores(player.score, enemy.score);
+				return {
+				  x: Math.abs((dx / distance) * difficulty),
+				  y: Math.abs((dy / distance) * difficulty)
+				}
+			}
 
-          player.move();
-          disc.move();
+			// disc movement and collision
+			function moveDisc(game){
+				game.disc.move();		
+				handleDiscCollisionWithParticipant(game.player, game.disc);
+				handleDiscCollisionWithParticipant(game.enemy, game.disc);
+				handleDiscCollisionWithWalls(game.disc);
+			}
+			
+			function handleDiscCollisionWithParticipant(player, disc) {
+				var dx = player.x - disc.x,
+					dy = player.y - disc.y,
+					distance = Math.sqrt(dx * dx + dy * dy);
 
-          detectCollisionWithDisc(player, disc);
-          detectCollisionWithDisc(enemy, disc);
-          detectDiscCollisionWithWalls(disc, canvasDrawer);
-          moveEnemy(difficulty);
+				if (distance < player.radius + disc.radius) {
+					distance = distance === 0 ? 0.1 : distance;
 
-          requestAnimationFrame(function () {
-              startGame();
-          });
-      }
+					var unitX = dx / distance,
+						unitY = dy / distance,
 
-      function detectCollisionWithDisc(player, disc) {
-          var dx = player.x - disc.x,
-              dy = player.y - disc.y,
-              distance = Math.sqrt(dx * dx + dy * dy);
+						force = -2,
+						forceX = unitX * force,
+						forceY = unitY * force;
 
-          if (distance < player.radius + disc.radius) {
-              if (distance === 0) {
-                  distance = 0.1;
-              }
+					disc.velocity.x += forceX;
+					disc.velocity.y += forceY;
+					
+					SoundPlayer.playPlayerColissionSound();
+				}
+			}
 
-              var unitX = dx / distance,
-                  unitY = dy / distance,
+			function handleDiscCollisionWithWalls(disc) {
+				// bounce off the floor
+				if (disc.y > CONSTS.playfield.height - disc.radius) {
+					disc.y = CONSTS.playfield.height - disc.radius;
+					disc.velocity.y = -Math.abs(disc.velocity.y);
+					SoundPlayer.playHitWallSound();
+				}
 
-                  force = -2,
-                  forceX = unitX * force,
-                  forceY = unitY * force;
+				// bounce off ceiling
+				if (disc.y < disc.radius) {
+					disc.y = disc.radius;
+					disc.velocity.y = Math.abs(disc.velocity.y);
+					SoundPlayer.playHitWallSound();
+				}
+				  
+				// bounce off right wall
+				if (disc.x > CONSTS.playfield.width - disc.radius) {
+					// goal on right side
+					if (CONSTS.goalLine.min < disc.y && disc.y <  CONSTS.goalLine.max) {
+						handleGoal(game.player);
+					} else {
+						disc.x = CONSTS.playfield.width - disc.radius;
+						disc.velocity.x = -Math.abs(disc.velocity.x);
+						SoundPlayer.playHitWallSound();
+					}             
+				}
 
-              disc.velocity.x += forceX;
-              disc.velocity.y += forceY;
+				// bounce off left wall
+				if (disc.x < disc.radius) {
+					// goal on left side
+					if (CONSTS.goalLine.min < disc.y && disc.y < CONSTS.goalLine.max){
+						handleGoal(game.enemy);
+					} else {
+						disc.x = disc.radius;
+						disc.velocity.x = Math.abs(disc.velocity.x);
+						SoundPlayer.playHitWallSound();
+					}
+				}
+			}
+			  
+			function handleGoal(player) {
+				player.score += 1;
+				game.disc.reset();
+				SoundPlayer.playGoalSound();
+			}
+			
+			// game end
+			function endGame(game){
+				if (game.player.score >= CONSTS.winningGoalCount) {
+					Renderer.drawEndScreen(CONSTS.winMsg);
+					stopAnimation(requestId);
+				} else if (game.enemy.score >= CONSTS.winningGoalCount) {
+					Renderer.drawEndScreen(CONSTS.overMsg);
+					stopAnimation(requestId);
+				}
+			}
+					
+			function stopAnimation(requestId){
+				if (requestId) {
+					window.cancelAnimationFrame(requestId);
+					requestId = undefined;
+				}
+				
+				if (timeId){
+					clearInterval(timeId);
+				}
+			}
 
-              //playing sound
-              playerColissionSound.play();
+			return Engine;
+		  }());
 
-              return true;
-          } else {
-              return false;
-          }
-      }
-
-      function detectDiscCollisionWithWalls(disc, canvasDrawer) {
-
-          // bounce off the floor
-          if (disc.y > canvasDrawer.canvasHeight - disc.radius) {
-              disc.y = canvasDrawer.canvasHeight - disc.radius;
-              disc.velocity.y = -Math.abs(disc.velocity.y);
-              //playing sounds
-              hitWallSound.play();
-          }
-
-          // bounce off ceiling
-          if (disc.y < disc.radius + 0) {
-              disc.y = disc.radius + 0;
-              disc.velocity.y = Math.abs(disc.velocity.y);
-              //playing sounds
-              hitWallSound.play();
-          }
-          // bounce off right wall
-          if (disc.x > canvasDrawer.canvasWidth - disc.radius && (disc.y < 120 || 240 < disc.y)) {
-              disc.x = canvasDrawer.canvasWidth - disc.radius;
-              disc.velocity.x = -Math.abs(disc.velocity.x);
-              //playing sounds
-              hitWallSound.play();
-          }
-
-          // bounce off left wall
-          if (disc.x < disc.radius && (disc.y < 120 || 240 < disc.y)) {
-              disc.x = disc.radius;
-              disc.velocity.x = Math.abs(disc.velocity.x);
-              //playing sounds
-              hitWallSound.play();
-          }
-
-
-          // goal in right side
-          if (disc.x >= canvasDrawer.canvasWidth && 120 < disc.y && disc.y < 240) {
-              disc.x = canvasDrawer.canvasWidth / 2;
-              disc.y = canvasDrawer.canvasHeight / 2;
-              disc.velocity.x = 0;
-              disc.velocity.y = 0;
-              player.score += 1;
-
-              //TODO: check score after 15 is game over
-              //playing sounds
-              goalSound.play();
-          }
-
-          // goal in left side
-          if (disc.x <= 0 && 120 < disc.y && disc.y < 240) {
-              disc.x = canvasDrawer.canvasWidth / 2;
-              disc.y = canvasDrawer.canvasHeight / 2;
-              disc.velocity.x = 0;
-              disc.velocity.y = 0;
-              enemy.score += 1;
-
-              //TODO: check score after 15 is game over
-              //playing sounds
-              goalSound.play();
-          }
-      }
-
-// enemy movement
-      function moveEnemy() {
-          var playGroundMiddle = canvasDrawer.canvasWidth / 2,
-              //enemyDefenceLine = canvasDrawer.canvasWidth * 5 / 8,
-              speed = getEnemyMoveSpeed();
-
-          if (disc.x > canvasDrawer.canvasWidth / 2) {
-              // if disc is passed defence line but not enemy x
-              if (disc.x > playGroundMiddle && enemy.x > playGroundMiddle) {
-                  //enemy.move("left", speed.x);
-                  moveEnemyX(speed.x);
-                  moveEnemyY(speed.y);
-              }
-              moveEnemyY(speed.y);
-          } else {
-              enemy.reset();
-          }
-      }
-
-      function moveEnemyY(speed) {
-          if (disc.y < enemy.y && disc.x < enemy.x) {
-              enemy.move("up", speed);
-          } else if (disc.y > enemy.y && disc.x < enemy.x) {
-              enemy.move("down", speed);
-          }
-      }
-
-      function moveEnemyX(speed) {
-          // if disc is passed enemy x
-          if (disc.x >= enemy.x) {
-              enemy.reset();
-          } else {
-              enemy.move("left", speed);
-          }
-      }
-
-      function getEnemyMoveSpeed() {
-          var dx = enemy.x - disc.x + 2.5,
-              dy = enemy.y - disc.y + 2.5,
-              distance = Math.sqrt(dx * dx + dy * dy);
-
-          distance = distance === 0 ? 0.1 : distance;
-
-          return {
-              x: Math.abs((dx / distance) * difficulty),
-              y: Math.abs((dy / distance) * difficulty)
-          }
-      }
-
-      return {
-          startGame: startGame
-      }
-  }());
-
-    return Engine;
+    return new Engine();
 });

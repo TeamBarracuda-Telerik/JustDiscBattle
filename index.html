@@ -1,28 +1,25 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Game</title>
+    <link href="Styles/styles.css" rel="stylesheet"/>
+    <script src="Scripts/Library/kinetic-v5.1.0.min.js"></script>
+</head>
+<body>
+<div class="blurred gameDisplayContainer">
+    <svg id="svg-field" width="640" height="80">
+        <a id="no_Delete" xlink:href="https://github.com/TeamBarracuda-Telerik/JustDiscBattle" target="_blank" x="0" y="0" width="20" height="20">
+            <image xlink:href="./Images/GitHub-Mark-32px.png" x="10" y="10" width="32" height="32" fill="none" stroke="none" />
+        </a>
+    </svg>
+    <svg id="playField" width="640px" height="360px"></svg>
+    <canvas id="canvas-field" width="640" height="360"></canvas>
+</div>
+<div id="start-menu-container" class="darkened">
+</div>
 
-	<head>
-		<meta charset="UTF-8">
-		<title>The Game</title>
-		<link href="Styles/styles.css" rel="stylesheet" />
-		<script src="Scripts\Library/kinetic-v5.1.0.min.js"></script>
-	</head>
-
-	<body>
-		<div class="blurred gameDisplayContainer">
-			<svg id="svg-field" width="640" height="80">
-				<a id="no_Delete" xlink:href="https://github.com/TeamBarracuda-Telerik/JustDiscBattle" target="_blank" x="0" y="0" width="20" height="20">
-					<image xlink:href="./Images/GitHub-Mark-32px.png" x="10" y="10" width="32" height="32" fill="none" stroke="none" />
-				</a>
-			</svg>
-			<svg id="playField" width="640px" height="360px"></svg>
-			<canvas id="canvas-field" width="640" height="360"></canvas>
-		</div>
-		<div id="start-menu-container" class="darkened">
-		</div>
-
-		<script src="Scripts\Renderer/Start-Menu-renderer.js"></script>
-		<script data-main="Scripts/app" src="Scripts/Library/require.js"></script>
-	</body>
-
+<script src="Scripts\Renderer\start-menu-renderer.js"></script>
+<script data-main="Scripts/app" src="Scripts/Library/require.js"></script>
+</body>
 </html>
