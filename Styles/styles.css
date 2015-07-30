@@ -26,3 +26,30 @@ body{
     left: 0;
     right: 0;
 }
+
+.blurred {
+	-webkit-filter: blur(3px) !important;
+	-moz-filter: blur(3px) !important;
+	-o-filter: blur(3px) !important;
+	-ms-filter: blur(3px) !important;
+	filter: blur(3px) !important;
+}
+
+#start-menu-container {
+	padding: 0;
+	margin: auto;
+	margin-top: 0;
+	display: block;
+	position: absolute !important;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	width: 640px;
+	height: 440px;
+	z-index: 10;
+}
+
+.darkened {
+	background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5));
+}
