@@ -404,9 +404,8 @@ define(["engine"],function (engine) {
             layer.add(exitButtonText);
             layer.add(tutorialText);
             layer.add(creditsText);
-
+			
             stage.add(layer);
-
         };
 
         return StartMenu;
