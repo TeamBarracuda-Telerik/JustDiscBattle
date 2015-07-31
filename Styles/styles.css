@@ -1,5 +1,8 @@
 body{
     position: relative;
+    background: url("../Images/ninja-city1.jpg");
+    background-repeat: no-repeat;
+    background-color: black;
 }
 
 #svg-field {

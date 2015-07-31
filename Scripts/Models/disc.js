@@ -6,6 +6,8 @@ define(function () {
             this.y = y;
             this.radius = radius;
             this.speed = 0;
+            this.image = new Image();
+            this.image.src = './Images/disc.png'; //imagePath
             this.velocity = {
                 x: 0,
                 y: 0

@@ -19,9 +19,10 @@ define(function () {
                 this.ctx.beginPath();
                 this.ctx.arc(disc.x, disc.y, disc.radius,  0, 2 * Math.PI);
                 this.ctx.fillStyle = 'yellowgreen';
-                this.ctx.fill();
+                //this.ctx.fill();
                 this.ctx.strokeStyle = 'black';
                 this.ctx.stroke();
+                this.ctx.drawImage(disc.image, disc.x - 17, disc.y - 17, 30, 30);
             },
 			clear: function () {
                 this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);

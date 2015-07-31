@@ -55,11 +55,11 @@ define(["participant"], function (Participant) {
                 dy = enemy.y - startPosition.y,
                 distance = Math.sqrt(dx * dx + dy * dy);
 
-            distance = distance === 0 ? distance = 0.1 : distance;
+            distance = distance === 0 ? 0.1 : distance;
 
             return {
-                x: Math.abs((dx / distance) * 2),
-                y: Math.abs((dy / distance) * 2)
+                x: Math.abs((dx / distance) * 3),
+                y: Math.abs((dy / distance) * 3)
             }
         }
 

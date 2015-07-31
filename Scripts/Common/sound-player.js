@@ -3,6 +3,7 @@ define([], function () {
 		var SoundPlayer = function(){
 			this.hitWallSound = new Audio("Sounds/HitWall.wav");
 			this.goalSound =new Audio("Sounds/WhatAGoal.wav");
+			this.goalSound.volume = 0.1;
 			this.playerColissionSound = new Audio("Sounds/PlayerHitBall.wav");
 			this.startGameSound = new Audio("Sounds/StartGame.wav");
 		};

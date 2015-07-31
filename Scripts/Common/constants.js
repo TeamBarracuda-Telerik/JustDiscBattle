@@ -33,7 +33,7 @@ define(['canvas-drawer'], function(canvasDrawer) {
 		},
 		startTime :0,
 		gameDifficulty: 7,
-		winningGoalCount: 3,
+		winningGoalCount: 5,
 		winMsg: "You Win",
 		overMsg: "Game Over"	
 		};

@@ -1,5 +1,5 @@
 define(['player', 'enemy', 'disc', "constants", "sound-player", "renderer", "startMenu"],
-    function (Player, Enemy, Disc, CONSTS, SoundPlayer, Renderer, StartMenu) {
+    function (Player, Enemy, Disc, CONSTS, SoundPlayer, Renderer) {
 		var Engine = (function () {
 			var game,	
 				requestId,
@@ -8,16 +8,10 @@ define(['player', 'enemy', 'disc', "constants", "sound-player", "renderer", "sta
 				game = this;
 				initializeGame(game);					
 			};
-			
-			// TODO:
-			// remove playfield module
-			// get name and difficulty from userinput
-			// hande game end - draw better end screens; add restart button
-			// beautify
 					  
 			Engine.prototype = {
 				startGame : function startGame(difficulty) {
-					difficultyLevel = difficulty || 5;
+					difficultyLevel = difficulty || 6;
 					Renderer.drawCanvas(game);
 					Renderer.drawSVG(game);
 					moveDisc(game);
@@ -28,8 +22,7 @@ define(['player', 'enemy', 'disc', "constants", "sound-player", "renderer", "sta
 			};
 			
 			// initialize
-			function initializeGame(game){
-				//StartMenu.draw();
+						function initializeGame(game){
 				SoundPlayer.playStartGameSound();
 				Renderer.drawPlayField();
 				//TODO: get name from start screen

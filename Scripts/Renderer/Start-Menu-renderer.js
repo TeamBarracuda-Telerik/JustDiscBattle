@@ -24,7 +24,7 @@ define(["engine"],function (engine) {
 
             var startButton = new Kinetic.Rect({
                     x      : stageHorizontalCenter - 140,
-                    y      : stageVerticalCenter + 150,
+                    y      : stageVerticalCenter + 50,
                     width  : 100,
                     height : 30,
                     stroke : buttonStroke,
@@ -43,7 +43,7 @@ define(["engine"],function (engine) {
 
             var tutorialButton = new Kinetic.Rect({
                     x      : stageHorizontalCenter - 130,
-                    y      : stageVerticalCenter - 35,
+                    y      : stageVerticalCenter - 95,
                     width  : 100,
                     height : 30,
                     stroke : buttonStroke,
@@ -63,7 +63,7 @@ define(["engine"],function (engine) {
 
             var creditsButton      = new Kinetic.Rect({
                     x      : stageHorizontalCenter + 40,
-                    y      : stageVerticalCenter - 50,
+                    y      : stageVerticalCenter - 110,
                     width  : 100,
                     height : 30,
                     stroke : buttonStroke,
@@ -83,7 +83,7 @@ define(["engine"],function (engine) {
 
             var exitButton = new Kinetic.Rect({
                     x      : stageHorizontalCenter + 140,
-                    y      : stageVerticalCenter + 150,
+                    y      : stageVerticalCenter + 50,
                     width  : 100,
                     height : 30,
                     stroke : buttonStroke,
@@ -163,7 +163,7 @@ define(["engine"],function (engine) {
 
             var tutorialText = new Kinetic.Text({
                 x          : 140,
-                y          : 100,
+                y          : 40,
                 text       : 'Welcome to Just Disc Battle!\n\n'+
                 'A, game inspired by the classic, Air hockey.'+
                 '\n Your objective is to beat the ai opponent!'+
@@ -178,8 +178,8 @@ define(["engine"],function (engine) {
 
             var creditsText = new Kinetic.Text({
                 x          : 140,
-                y          : 100,
-                text       : 'Telerik Academy team Barracuda\n\n' + 'Authors: \n' + 'M.Yankov - Mihail Yankov\n' + 'Emiliya93 - Emilia Georghieva\n' + 'Beardhammer - Martin Ali\n' + 'Adrian.Apostolov - Adrian Apostolov\n' + 'A.sideriss - Alexis Sideris\n' + 'enchev93 - Georgi Enchev\n' + 'dlachkov - Dimitar Lachkov\n' + 'Andrei_pl - Andrey Traykov',
+                y          : 40,
+                text       : 'Telerik Academy team Barracuda\n\n' + 'Authors: \n' + 'M.Yankov - Mihail Yankov\n' + 'Beardhammer - Martin Ali\n' + 'Adrian.Apostolov - Adrian Apostolov\n' + 'A.sideriss - Alexis Sideris\n' + 'enchev93 - Georgi Enchev',
                 fontSize   : 20,
                 fontFamily : 'Consolas',
                 width      : 400,
