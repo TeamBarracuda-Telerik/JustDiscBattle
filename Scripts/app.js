@@ -5,7 +5,7 @@
             "enemy": "Models/enemy",
             "disc": "Models/disc",
             "participant": "Models/participant",
-            "startMenu" : 'Renderer/start-menu-renderer',
+            "startMenu" : 'Renderer/start-menu',
             "engine" : "Engine/engine",
             "canvas-drawer" : "Renderer/canvas-drawer",
             "svg-drawer": "Renderer/svg-drawer",
