@@ -49,9 +49,9 @@ define(['player', 'enemy', 'disc', "constants", "sound-player", "renderer", "sta
 				canvas.addEventListener('mousemove', function(evt) {
 					movePlayerWithMouse(evt, canvas, player)
 				}, false);
-				// canvas.addEventListener('touchmove', function(evt) {
-					// movePlayerWithMouse(evt, canvas, player)
-				// }, false);
+				canvas.addEventListener('touchmove', function(evt) {
+					movePlayerWithMouse(evt, canvas, player)
+				}, false);
 			}
 				
 			function movePlayerWithMouse(evt, canvas, player){
